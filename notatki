@@ -1,0 +1,23 @@
+1.klasy postaci staty dex str int
+2.funkcja generowania losowego przeciwnika na podstawie poziomu trudnosci
+3.funkcyjny system lootu (luk, rozdzka, miecz, na podstawie poziomu postaci i poziomu trudnosci
+
+4.system lvlowania i dodawania statystyk
+
+
+
+
+                                          item
+                                           /
+                                          /
+                        champion - - walka - - exp
+                       /        \
+                      /          \
+                     /            \
+                   itemy        skille
+                  /                   \
+               lvlreq               lvlreq
+
+a) zadaje sobie obrazenia walczac z ta sama klasa postaci
+b) wartości po walce nie resetuja sie:
+rozwiazanie 1) moge je nadpisac
