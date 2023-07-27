@@ -1,7 +1,8 @@
 import random
+import MagicWarriorsItemList
 
 
-class Char:
+class Hero:
     def __init__(self, name, stre, dex, intel, exp, lvl, hitpoints, skillpoints, statpoints):
         self.name = name
         self.stre = stre
@@ -17,7 +18,7 @@ class Char:
     def exp_lvl_up(self):
         global difficulty
         if difficulty == "Hard":
-            self.exp += 10
+            self.exp += 3
         elif difficulty == "Medium":
             self.exp += 2
         elif difficulty == "Easy":
@@ -33,7 +34,7 @@ You have {self.skillpoints} skillpoints and {self.statpoints} statpoints!
                  """)
         return
 
-    def character_info(self, skillpoints, statpoints):
+    def info(self, skillpoints, statpoints):
         print(f'You are {self.name} lvl {self.lvl} {self.exp}exp')
         if self.skillpoints > 0:
             print(f'You have {skillpoints} skillpoints to spend!')
@@ -41,29 +42,35 @@ You have {self.skillpoints} skillpoints and {self.statpoints} statpoints!
             print(f'You have {statpoints} statpoints to spend!')
 
 
-class Enemy(Char):
+class Enemy(Hero):
     def __init__(self, name, stre, dex, intel, lvl, hitpoints):
         super().__init__(name, stre, dex, intel, 0, lvl, hitpoints, 0, 0)
 
     @staticmethod
     def pick_random():
-        enemy_list = [mag, war, archer, zombie]
+        enemy_list = [mag_enemy, war_enemy, archer_enemy, zombie]
         enemy = random.choice(enemy_list)
         return enemy
 
-    def fight_random(self, champion):
+    def fight(self, champion):
+        champion_original_hp = champion.hitpoints
+        enemy_original_hp = self.hitpoints
         while self.hitpoints > 0 and champion.hitpoints > 0:
             x = input(f"""choose skill to attack with
 fireball
                 """)
             if x == 'fireball':
-                print(f'zadajesz 5 obrazen, przeciwnik ma teraz {self.hitpoints - 5} hp!')
+                print(f'you deal 5 damage, enemy has{self.hitpoints - 5} hp now!')
                 self.hitpoints = self.hitpoints - 5
         if self.hitpoints <= 0:
-            print(f'gratulacje, pokonujesz {self.name}, zdobywasz x expa i item!')
+            self.hitpoints = enemy_original_hp
+            champion.hitpoints = champion_original_hp
+            print(f'Congrats, you defeat {self.name}, gain x expa and item!')
             return 'win'
         elif champion.hitpoints <= 0:
-            print(f"Przegrywasz z {self.name} mozesz okryc sie hanba!")
+            self.hitpoints = enemy_original_hp
+            champion.hitpoints = champion_original_hp
+            print(f"You lose with fight {self.name} you can cover yourself in shame!")
             return 'lose'
 
 
@@ -71,7 +78,7 @@ class Skills:
     def __init__(self):
         ...
 
-    def skill(self, stre, dex, intel):
+    def skill (self, stre, dex, intel):
         if player == mag:
             print(f'You shot your fireball and deal {3 + (0.5 * intel)} damage!')
         elif player == war:
@@ -88,11 +95,19 @@ class Loot:
         self.defense = defense
 
 
-class LootTable:
+class LootClass:
+    # TC = Treasure Class, higher = more rare, better
+
+    def pick_Lootclass(self):
+        TCs = ['EmptyLoot', 'TC1', 'TC2', 'TC3']
+        probabilities = [0.4, 0.35, 0.2, 0.05]
+        chosen_lootclass = random.choices(TCs, weights=probabilities, k=1)
+        return chosen_lootclass[0]
+
     ...
 
 
-def print_intro_pick_champ():
+def print_intro_and_pick_hero():
     while True:
         champion = input("""
     Welcome to the 'Magic Warriors' game!
@@ -123,11 +138,11 @@ def choose_difficulty():
 
 
 def main_game_logic():
-    champion = print_intro_pick_champ()
+    champion = print_intro_and_pick_hero()
     global difficulty
     difficulty = choose_difficulty()
     while True:
-        Char.character_info(champion, champion.skillpoints, champion.statpoints)
+        Hero.info(champion, champion.skillpoints, champion.statpoints)
         decision = input(f"""
 Write:
 fight 
@@ -139,9 +154,9 @@ close
         if decision == 'fight':
             enemy = Enemy.pick_random()
             print(f'your enemy is {enemy.name, enemy.hitpoints}hp')
-            result = Enemy.fight_random(enemy, champion)
+            result = Enemy.fight(enemy, champion)
             if result == 'win':
-                Char.exp_lvl_up(champion)
+                Hero.exp_lvl_up(champion)
         elif decision == 'sks':
             print('here you can spend your skillpoints and statpoints')
         elif decision == 'difficulty':
@@ -154,8 +169,13 @@ close
 
 
 if __name__ == '__main__':
-    mag = Char('Mage', 2, 4, 10, 0, 1, 10, 0, 0)
-    war = Char('Warrior', 10, 4, 2, 0, 1, 15, 0, 0)
-    archer = Char('Archer', 2, 10, 4, 0, 1, 12, 0, 0)
+    # Enemies to fight with:
+    mag_enemy = Enemy('Mage', 2, 4, 10, 1, 10)
+    war_enemy = Enemy('Warrior', 10, 4, 2, 1, 15)
+    archer_enemy = Enemy('Archer', 2, 10, 4, 1, 12)
     zombie = Enemy('Zombie', 5, 1, 0, 1, 20)
+    # Player hero choice:
+    mag = Hero('Mage', 2, 4, 10, 0, 1, 10, 0, 0)
+    war = Hero('Warrior', 10, 4, 2, 0, 1, 15, 0, 0)
+    archer = Hero('Archer', 2, 10, 4, 0, 1, 12, 0, 0)
     main_game_logic()
