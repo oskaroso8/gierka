@@ -1,18 +1,21 @@
 import random
-import MagicWarriorsItemList
+import MagicWarriorsItemList as il
 
 
 class Hero:
-    def __init__(self, name, stre, dex, intel, exp, lvl, hitpoints, skillpoints, statpoints):
+    def __init__(self, name, strength, dexterity, intelligence, exp, lvl, hitpoints, skillpoints, statpoints, stats):
         self.name = name
-        self.stre = stre
-        self.dex = dex
-        self.int = intel
-        self.exp = exp
         self.lvl = lvl
+        self.exp = exp
         self.hitpoints = hitpoints
         self.skillpoints = skillpoints
         self.statpoints = statpoints
+        self.stats = {
+            'strength': strength,
+            'dexterity': dexterity,
+            'intelligence': intelligence,
+            'hitpoints': hitpoints,
+        }
 
 
     def exp_lvl_up(self):
@@ -40,6 +43,45 @@ You have {self.skillpoints} skillpoints and {self.statpoints} statpoints!
             print(f'You have {skillpoints} skillpoints to spend!')
         if self.statpoints > 0:
             print(f'You have {statpoints} statpoints to spend!')
+
+
+class Mage(Hero):
+    def __init__(self):
+        super().__init__(self.name, self.stats, 0, 1, )
+        self.lvl = 1
+        self.exp = 0
+        self.stats = {
+        'strength' : 3,
+        'dexterity' : 5,
+        'intelligence' : 8,
+        'hitpoints' : 15,
+        }
+
+
+class Warrior(Hero):
+    def __init__(self):
+        super().__init__(self.name, self.stats, 0, 1)
+        self.lvl = 1
+        self.exp = 0
+        self.stats = {
+            'strength': 3,
+            'dexterity': 5,
+            'intelligence': 8,
+            'hitpoints': 30,
+        }
+
+
+class Archer(Hero):
+    def __init__(self):
+        super().__init__(self.name, self.stats,  0, 1)
+        self.lvl = 1
+        self.exp = 0
+        self.stats = {
+            'strength': 3,
+            'dexterity': 5,
+            'intelligence': 8,
+            'hitpoints': 20,
+        }
 
 
 class Enemy(Hero):
